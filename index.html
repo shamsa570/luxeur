@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUXEURS — Premium Pakistani Fashion</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-logo">LUXEURS</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="showPage('home')">Home</a></li>
+    <li><a href="#" onclick="showPage('shop')">Shop</a></li>
+    <li><a href="#" onclick="showPage('about')">About Us</a></li>
+    <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="icon-btn" onclick="toggleSearch()" title="Search">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+    <button class="icon-btn" onclick="showPage('login')" title="Account">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </button>
+    <button class="icon-btn cart-btn" onclick="showPage('cart')" title="Cart">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- SEARCH BAR -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search for products..." oninput="searchProducts()">
+    <button onclick="toggleSearch()">✕</button>
+  </div>
+</div>
+
+<!-- PAGES -->
+<div id="app">
+
+<!-- ===== HOME PAGE ===== -->
+<div id="page-home" class="page active">
+
+  <!-- HERO CAROUSEL -->
+  <section class="hero">
+    <div class="carousel" id="carousel">
+      <div class="slide active" style="background: linear-gradient(135deg, #1a0a00 0%, #3d1c00 50%, #1a0a00 100%);">
+        <div class="slide-content">
+          <span class="slide-tag">New Collection</span>
+          <h1>Embroidered<br><em>Elegance</em></h1>
+          <p>Luxury lawn & silk collections crafted for the modern woman</p>
+          <button class="btn-primary" onclick="showPage('shop')">Shop Now</button>
+        </div>
+        <div class="slide-deco">🌸</div>
+      </div>
+      <div class="slide" style="background: linear-gradient(135deg, #0a1a0a 0%, #1c3d1c 50%, #0a1a0a 100%);">
+        <div class="slide-content">
+          <span class="slide-tag">Festive Season</span>
+          <h1>Upto <em>40% Sale</em></h1>
+          <p>Premium 3-piece dresses & co-ord sets for every occasion</p>
+          <button class="btn-primary" onclick="showPage('shop')">Explore Sale</button>
+        </div>
+        <div class="slide-deco">✨</div>
+      </div>
+      <div class="slide" style="background: linear-gradient(135deg, #0a0a1a 0%, #1c1c3d 50%, #0a0a1a 100%);">
+        <div class="slide-content">
+          <span class="slide-tag">Express Delivery</span>
+          <h1>Delivered<br><em>Across Pakistan</em></h1>
+          <p>Fast & secure delivery to your doorstep, nationwide</p>
+          <button class="btn-primary" onclick="showPage('shop')">Order Now</button>
+        </div>
+        <div class="slide-deco">🚚</div>
+      </div>
+    </div>
+    <button class="carousel-btn prev" onclick="changeSlide(-1)">‹</button>
+    <button class="carousel-btn next" onclick="changeSlide(1)">›</button>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="categories section-pad">
+    <h2 class="section-title">Shop by <em>Category</em></h2>
+    <div class="category-grid">
+      <div class="cat-card" onclick="filterCategory('3 Piece')">
+        <div class="cat-icon">👗</div>
+        <h3>3 Piece Dresses</h3>
+        <p>Complete ensembles</p>
+      </div>
+      <div class="cat-card" onclick="filterCategory('Co-ord')">
+        <div class="cat-icon">✨</div>
+        <h3>Co-ord Sets</h3>
+        <p>Matching perfection</p>
+      </div>
+      <div class="cat-card" onclick="filterCategory('Festive')">
+        <div class="cat-icon">🌟</div>
+        <h3>Festive Wear</h3>
+        <p>Celebration ready</p>
+      </div>
+      <div class="cat-card" onclick="filterCategory('Kaftan')">
+        <div class="cat-icon">🌺</div>
+        <h3>Kaftan</h3>
+        <p>Breezy elegance</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="products-section section-pad" id="homeProducts">
+    <h2 class="section-title">Featured <em>Products</em></h2>
+    <div class="product-grid" id="homeProductGrid">
+      <div class="loading-spinner">Loading products...</div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== SHOP PAGE ===== -->
+<div id="page-shop" class="page">
+  <div class="page-header">
+    <h1>Our <em>Collection</em></h1>
+    <p>Discover premium Pakistani fashion</p>
+  </div>
+  <div class="shop-filters">
+    <button class="filter-btn active" onclick="filterCategory('all', this)">All</button>
+    <button class="filter-btn" onclick="filterCategory('3 Piece', this)">3 Piece</button>
+    <button class="filter-btn" onclick="filterCategory('Co-ord', this)">Co-ord Sets</button>
+    <button class="filter-btn" onclick="filterCategory('Festive', this)">Festive</button>
+    <button class="filter-btn" onclick="filterCategory('Kaftan', this)">Kaftan</button>
+  </div>
+  <div class="product-grid" id="shopProductGrid">
+    <div class="loading-spinner">Loading products...</div>
+  </div>
+</div>
+
+<!-- ===== PRODUCT DETAIL PAGE ===== -->
+<div id="page-product" class="page">
+  <div class="product-detail" id="productDetail"></div>
+</div>
+
+<!-- ===== CART PAGE ===== -->
+<div id="page-cart" class="page">
+  <div class="page-header">
+    <h1>Your <em>Cart</em></h1>
+  </div>
+  <div class="cart-container">
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-summary" id="cartSummary"></div>
+  </div>
+</div>
+
+<!-- ===== CHECKOUT PAGE ===== -->
+<div id="page-checkout" class="page">
+  <div class="page-header">
+    <h1>Checkout</h1>
+  </div>
+  <div class="checkout-container">
+    <div class="checkout-form">
+      <h3>Delivery Information</h3>
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" id="chkName" placeholder="Your full name" required>
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" id="chkPhone" placeholder="+92 300 0000000" required>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="chkEmail" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>Address *</label>
+        <textarea id="chkAddress" placeholder="House #, Street, Area" rows="3" required></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" id="chkCity" placeholder="Lahore" required>
+        </div>
+        <div class="form-group">
+          <label>Postal Code</label>
+          <input type="text" id="chkPostal" placeholder="54000">
+        </div>
+      </div>
+      <button class="btn-primary full-width" onclick="placeOrder()">Place Order</button>
+    </div>
+    <div class="order-summary" id="orderSummary"></div>
+  </div>
+</div>
+
+<!-- ===== ORDER CONFIRMATION ===== -->
+<div id="page-confirmation" class="page">
+  <div class="confirmation-box">
+    <div class="check-circle">✓</div>
+    <h1>Order Placed!</h1>
+    <p>Thank you for shopping with Luxeurs</p>
+    <div class="order-info">
+      <p>📦 Expected Delivery: <strong>3–5 Business Days</strong></p>
+      <p>🚚 Delivery across all of Pakistan</p>
+      <p id="confirmOrderId"></p>
+    </div>
+    <button class="btn-primary" onclick="showPage('shop')">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- ===== LOGIN PAGE ===== -->
+<div id="page-login" class="page">
+  <div class="auth-container">
+    <div class="auth-box">
+      <h2>Welcome Back</h2>
+      <p>Sign in to your Luxeurs account</p>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="btn-primary full-width" onclick="loginUser()">Sign In</button>
+      <p class="auth-switch">Don't have an account? <a href="#" onclick="showPage('register')">Register</a></p>
+      
+    </div>
+  </div>
+</div>
+
+<!-- ===== REGISTER PAGE ===== -->
+<div id="page-register" class="page">
+  <div class="auth-container">
+    <div class="auth-box">
+      <h2>Create Account</h2>
+      <p>Join Luxeurs for exclusive deals</p>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="regName" placeholder="Your full name">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="regEmail" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="regPassword" placeholder="••••••••">
+      </div>
+      <button class="btn-primary full-width" onclick="registerUser()">Create Account</button>
+      <p class="auth-switch">Already have an account? <a href="#" onclick="showPage('login')">Sign In</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ABOUT PAGE ===== -->
+<div id="page-about" class="page">
+  <div class="page-header">
+    <h1>About <em>Luxeurs</em></h1>
+  </div>
+  <div class="about-content">
+    <div class="about-text">
+      <h2>Our Story</h2>
+      <p>Luxeurs was born from a passion for authentic Pakistani fashion. We curate the finest lawn, silk, and chiffon collections that celebrate the rich textile heritage of Pakistan while embracing contemporary aesthetics.</p>
+      <p>From intricate embroidery to modern minimalist cuts, every piece in our collection tells a story of craftsmanship and style.</p>
+      <div class="about-stats">
+        <div class="stat"><h3>5000+</h3><p>Happy Customers</p></div>
+        <div class="stat"><h3>200+</h3><p>Products</p></div>
+        <div class="stat"><h3>All Pakistan</h3><p>Delivery</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CONTACT PAGE ===== -->
+<div id="page-contact" class="page">
+  <div class="page-header">
+    <h1>Contact <em>Us</em></h1>
+  </div>
+  <div class="contact-container">
+    <div class="contact-form">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="cName" placeholder="Full name">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="cEmail" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea id="cMessage" rows="5" placeholder="How can we help you?"></textarea>
+      </div>
+      <button class="btn-primary" onclick="sendMessage()">Send Message</button>
+    </div>
+    <div class="contact-info">
+      <h3>Get in Touch</h3>
+      <p>📧 info@luxeurs.pk</p>
+      <p>📞 +92 300 1234567</p>
+      <p>📍 Lahore, Punjab, Pakistan</p>
+      <p>🕐 Mon–Sat: 9AM – 7PM</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end #app -->
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4>LUXEURS</h4>
+      <p>Premium Pakistani fashion for the modern woman. Quality, elegance, and style delivered nationwide.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#" onclick="showPage('home')">Home</a></li>
+        <li><a href="#" onclick="showPage('shop')">Shop</a></li>
+        <li><a href="#" onclick="showPage('about')">About Us</a></li>
+        <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Customer Service</h4>
+      <ul>
+        <li><a href="#">FAQs</a></li>
+        <li><a href="#">Delivery Policy</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Returns</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>📧 info@luxeurs.pk</p>
+      <p>📞 +92 300 1234567</p>
+      <p>📍 Lahore, Pakistan</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Luxeurs. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

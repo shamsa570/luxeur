@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxeurs — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     LOGIN SCREEN — shown until Firestore confirms
+     the user has role = "admin"
+     ══════════════════════════════════════════════ -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">LUXEURS</div>
+    <p class="login-sub">Admin Panel</p>
+
+    <div id="loginError" class="error-banner" style="display:none"></div>
+
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="adminEmail" placeholder="admin@luxeurs.pk" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="adminPassword" placeholder="••••••••" autocomplete="current-password"
+             onkeydown="if(event.key==='Enter') doAdminLogin()">
+    </div>
+    <button class="btn-login" onclick="doAdminLogin()" id="loginBtn">Sign In</button>
+
+    <p class="login-note">
+      🔒 Access restricted to authorised administrators only.<br>
+      Regular user accounts will be rejected.
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHECKING SCREEN — shown while we verify role
+     ══════════════════════════════════════════════ -->
+<div id="checkingScreen" class="checking-screen" style="display:none">
+  <div class="spinner"></div>
+  <p>Verifying admin access…</p>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     DASHBOARD — shown ONLY after role verified
+     ══════════════════════════════════════════════ -->
+<div id="dashboardScreen" style="display:none">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">LUXEURS<small>Admin</small></div>
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" onclick="showSection('dashboard',this)">📊 Dashboard</button>
+      <button class="nav-btn" onclick="showSection('orders',this)">📦 Orders</button>
+      <button class="nav-btn" onclick="showSection('products',this)">👗 Products</button>
+      <button class="nav-btn" onclick="showSection('users',this)">👥 Users</button>
+      <button class="nav-btn" onclick="showSection('messages',this)">💬 Messages</button>
+    </nav>
+    <div class="sidebar-footer">
+      <p id="adminEmailDisplay"></p>
+      <button class="btn-logout" onclick="doLogout()">🚪 Logout</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <h1 id="sectionTitle">Dashboard</h1>
+      <span id="topbarDate"></span>
+    </header>
+
+    <!-- ── DASHBOARD ── -->
+    <section id="sec-dashboard" class="section active">
+      <div class="stats-grid">
+        <div class="stat-card gold">
+          <div class="stat-icon">📦</div>
+          <div><h3 id="s-total">0</h3><p>Total Orders</p></div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-icon">⏳</div>
+          <div><h3 id="s-processing">0</h3><p>Processing</p></div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon">🚚</div>
+          <div><h3 id="s-shipped">0</h3><p>Shipped</p></div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">✅</div>
+          <div><h3 id="s-delivered">0</h3><p>Delivered</p></div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-icon">❌</div>
+          <div><h3 id="s-cancelled">0</h3><p>Cancelled</p></div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-icon">💰</div>
+          <div><h3 id="s-revenue">Rs. 0</h3><p>Revenue</p></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👗</div>
+          <div><h3 id="s-products">0</h3><p>Products</p></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div><h3 id="s-users">0</h3><p>Customers</p></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:2rem">
+        <div class="card-header"><h3>Recent Orders</h3></div>
+        <div id="recentOrdersTable"></div>
+      </div>
+    </section>
+
+    <!-- ── ORDERS ── -->
+    <section id="sec-orders" class="section">
+      <div class="card">
+        <div class="card-header">
+          <h3>All Orders</h3>
+          <select onchange="filterOrders(this.value)" class="filter-select">
+            <option value="all">All Status</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div id="allOrdersTable"></div>
+      </div>
+    </section>
+
+    <!-- ── PRODUCTS ── -->
+    <section id="sec-products" class="section">
+      <div class="card-header" style="margin-bottom:1.5rem">
+        <h3 style="font-size:1.4rem">Products</h3>
+        <button class="btn-primary" onclick="openProductModal()">+ Add Product</button>
+      </div>
+      <div id="productsGrid" class="products-grid"></div>
+    </section>
+
+    <!-- ── USERS ── -->
+    <section id="sec-users" class="section">
+      <div class="card">
+        <div class="card-header"><h3>Registered Customers</h3></div>
+        <div id="usersTable"></div>
+      </div>
+    </section>
+
+    <!-- ── MESSAGES ── -->
+    <section id="sec-messages" class="section">
+      <div class="card">
+        <div class="card-header"><h3>Contact Messages</h3></div>
+        <div id="messagesTable"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PRODUCT MODAL
+     ══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="productModal" onclick="maybeCloseModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeProductModal()">✕</button>
+    <h3 id="modalTitle">Add Product</h3>
+    <input type="hidden" id="pId">
+    <div class="form-group">
+      <label>Product Name *</label>
+      <input type="text" id="pName" placeholder="e.g. Embroidered Lawn Suit">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Price (Rs.) *</label>
+        <input type="number" id="pPrice" placeholder="3500">
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select id="pCategory">
+          <option value="3 Piece">3 Piece</option>
+          <option value="Co-ord">Co-ord Sets</option>
+          <option value="Festive">Festive</option>
+          <option value="Kaftan">Kaftan</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Image URL</label>
+      <input type="url" id="pImage" placeholder="https://...">
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="pDesc" rows="3" placeholder="Product description..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Stock Quantity</label>
+        <input type="number" id="pStock" placeholder="50">
+      </div>
+      <div class="form-group">
+        <label>Sizes (comma separated)</label>
+        <input type="text" id="pSizes" placeholder="S, M, L, XL">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeProductModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="admin-app.js"></script>
+</body>
+</html>
